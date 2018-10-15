@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		
+		<script type="text/javascript">
+			var Singleton = (function(){
+				var instance;//创建一个实例
+				
+				
+				var name = '张三';//创建私有属性
+				function parivateMethods(){
+					console.log('私有方法');
+				}
+				
+				function getName(){
+					console.log('name',name)
+					return name;
+				}
+				
+				function setName(str){
+					name = str;
+				}
+				
+				function init(){
+					return{
+						getUserName:getName,
+						setUserName:setName
+					}
+				}
+				
+				return{
+					getInstance:function(){
+						if(!instance){
+							instance = init();
+						}
+						
+						return instance;
+					}
+				}
+				
+			})();
+			
+			var i = Singleton.getInstance();
+			i.getUserName();
+			
+			var j = Singleton.getInstance();
+			j.setUserName('野猪佩奇');
+			j.getUserName();
+			i.getUserName();
+		</script>
+	</body>
+</html>

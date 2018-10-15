@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>揭示模式</title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//此模式类似与Vue的congfig全局变量
+			var Revealing = (function(){
+				var STATIC_YEARS = 2018;//定义私有变量
+				var shoppingBag = [];//购物车
+				
+				//定义私有方法
+				function privateGetMyYears(){
+					
+				};
+				
+				function addItem(name,price){
+					console.log('向购物车中添加商品')
+					shoppingBag.push({
+						name:name,
+						price:price
+					})
+				}
+				
+				
+				//获取购物车总价格
+				function getTotal(){
+					console.log("获取总价格");
+					var total = 0;
+					shoppingBag.forEach(function(v,i){
+						total+=(v['price']-0);
+					});
+					return total;
+				}
+				
+				return{
+					addShoppings:addItem,//部分方法外部可访问
+					getShoppingTotalPrice:getTotal//部分公共方法外部可访问
+				}
+			})();
+			
+			console.log(Revealing);//私有方法和私有属性并未暴露
+			Revealing.addShoppings("香水",100);
+			Revealing.addShoppings("口香糖",500);
+			Revealing.addShoppings("手表",120);
+			console.log('获取购物车总价格为:',Revealing.getShoppingTotalPrice())
+			Revealing.addShoppings("手表1",1548);
+			Revealing.addShoppings("手表2",1200);
+			console.log('获取购物车总价格为:',Revealing.getShoppingTotalPrice())
+		</script>
+	</body>
+</html>

@@ -5,30 +5,59 @@
 		<title></title>
 	</head>
 	<body>
-		<script src="js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			$(function(){
-				var publisher = {};    
-				publisher.clietList = []; 
+			var pubSub = function(){
+				var threadPool = [];//创建私有变量
+				var id = 0;
+				//发布任务
+				this.publish = function(name){
+					console.log('发布 '+name+" 任务");
+					threadPool.forEach(function(v,i){
+						if(v['name']==name){
+							v['fun']();
+						}
+					})
+				}.bind(this);
 				
-				publisher.subscribe = function(fnName,fn) { 
-				    this.clietList.push(fn);
-				    
-				};
+				//订阅任务
+				this.subscribe = function(name,fun){
+					threadPool.push({
+						id:++id,
+						name:name,
+						fun:fun
+					})
+					return id;
+				}.bind(this);
 				
 				
-				publisher.subscribe('done',sayHi);
-				
-				
-				function sayHi(){
-					console.log("hello world");
-				}
-				
-				function goTo(){
-					console.log("go to......");
-					
-				}
-			});
+				//取消订阅
+				this.unsubscribe = function(id){
+					threadPool.forEach(function(v,i){
+						if(v['id']==id){
+							console.log("取消订阅任务: ",v['name']+" 成功！ id:"+v['id']);
+							threadPool.splice(i,1);
+						}
+					})
+					console.log(threadPool)
+				}.bind(this);
+			}
+			
+			var p = new pubSub();
+			
+			var id1 = p.subscribe('hello',function(){
+				console.log('订阅hello 任务1')
+			})
+			
+			var id2 = p.subscribe('hello',function(){
+				console.log('订阅hello 任务2')
+			})
+			
+			p.publish('hello');//发布hello 任务
+			
+			//取消订阅
+			p.unsubscribe(id2);
+			p.publish('hello');//发布hello 任务
+			
 		</script>
 	</body>
 </html>
