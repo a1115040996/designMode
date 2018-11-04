@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/Facade.css"/>
+	</head>
+	<body>
+		
+		<div class="gallery-container">
+			<div class="gallery-wrapper">
+				<div class="gallery-item"></div>
+				<div class="gallery-item"></div>
+				<div class="gallery-item"></div>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			//将对象中的数据formatter一下
+			//应用到css中的写法
+			//----------------封装工具类 start
+			Object.prototype.toFormatterString = function(){
+				var s = "";
+				var keys = Object.keys(this);
+				for (var i=0;len = keys.length,i<len;i++) {
+					s+=keys[i]+":"+this[keys[i]]+";";
+				}
+				return s;
+			}
+			
+			
+			var T = function(selector){
+				return T.prototype.getDoms(selector);
+			}
+			
+			
+			//设置颜色
+			T.prototype = {
+				//init 
+				getDoms:function(selector){
+					this.domList = Array.prototype.slice.call(document.querySelectorAll(selector),0);
+					return this;
+				},
+				
+				//tools
+				setBgColor:function(color){
+					var ds = this.domList;
+					ds.forEach(function(v,i){
+						v.style.background = color;
+					})
+					return this;
+				},
+				setCss:function(obj){
+					var ds =  this.domList;
+					//赋值css样式
+					for(var i = 0; len = ds.length,i < len; i++){
+						ds[i].style = ds[i].getAttribute('style')+obj.toFormatterString();
+					}
+					return this;
+				},
+				
+				//设置随机颜色
+				setRandomColor:function(){
+					function getRandomColor(){
+						var colorValue = [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'];
+						var s = "#";
+						for (var i=0;i<6;i++) {
+							s+=colorValue[Math.floor(Math.random()*16)];
+						}
+						
+						return s;
+					}
+					
+					this.domList.forEach(function(v,i){
+						v.style.background = getRandomColor();
+					});
+				}
+			}
+			
+			//----------------封装工具类 end
+			T('.gallery-item').setRandomColor();
+			
+		</script>
+	</body>
+</html>

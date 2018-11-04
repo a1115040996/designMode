@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		
+		
+		<script type="text/javascript">
+			var soduko = (function(){
+				var _soduko = "";
+				function getInitMatrix(){
+					var matrix = [];
+					for(var i=0;i<9;i++){
+						var temp = [];
+						var randomList = [1,2,3,4,5,6,7,8,9];
+						for (var j=0;j<randomList.length;j++) {
+							var random = Math.floor(Math.random()*(randomList.length));
+							temp.push(randomList[random]);
+							randomList.splice(random,1);
+							j--;
+						}
+						matrix.push(temp);
+					}
+					return matrix;
+				}
+				
+				//修正数组
+				function FormatterMatrix(){
+					var initMatrix = getInitMatrix();
+					
+					//保持纵横数据不重复
+					for (var x=0;x<9;x++) {
+						initMatrix.forEach(function(v,i){
+							v.forEach(function(val,ind){
+								//console.log('第'+i+'行 第'+ind+'列 此数据'+val+'是否重复');
+								//console.log('未替换时的元数据:------------*******',v);
+								//如果此数据有重复 则取第一个缺少的元素进行置换
+								var repetitionList = checkIsInColum(ind,val);
+								//console.log('缺少的元素:=====>',repetitionList)
+								if(repetitionList.length>0){
+									//找到这个元素所在的下标值 并对两者进行互换
+									var repeatIndex =  0;
+									repeatIndex =  v.indexOf(repetitionList[0]);
+									var temp = val;
+									v[ind] = repetitionList[0];
+									v[repeatIndex] = temp;
+								
+									console.log('需要替换的值********************',v[ind] ,v[repeatIndex]);
+								}
+							});
+						});
+					}
+					
+					
+					
+					
+					
+					
+					
+					
+					//检查此数字是否在此列中出现过，如果出现次数大于两次，则返回此列缺少的数字
+					function checkIsInColum(colum,num){
+						var colums = [];
+						var appearCount = 0;
+						initMatrix.forEach(function(v,i){
+							colums.push(v[colum]);
+							if(v[colum]==num) ++appearCount;
+						});
+						
+						//如果只出现一次 则返回true
+						if(appearCount==1){return [];}
+						
+						//如果此列此数字出现次数多于两次 则返回此列缺少的数字
+						if(appearCount>=2){
+							var disappearList = [];//未出现的数字统计
+							for (var j=1;j<10;j++) {
+								var isAppear = false;
+								colums.forEach(function(v,i){
+									if(v==j){isAppear=true}
+								});
+								//将未出现的数字存入数组
+								if(!isAppear){
+									disappearList.push(j);
+								}
+							}
+							return disappearList;
+						}
+						
+					}
+					
+					
+					//检查是否在九个格子中有重复的数据
+					function checkIsInNineTable(x,y,num){
+						//判断此数字出现于第几维度
+						var martrixX =  Math.floor(x/3)*3;
+						var martrixY = Math.floor(y/3)*3;//y轴维度
+						
+						var isAppearCount = 0;//判断此数字是否出现过 如果出现过则返回所对应的下标
+						var appearAxios = [];
+						for (var x=martrixX;x<martrixX+3;x++) {
+							for (var y=martrixY;y<martrixY+3;y++) {
+								if(initMatrix[x][y]==num){
+									++isAppearCount;
+								}
+							}
+						}
+						
+						//如果此数字从未出现过，则返回此数字
+						if(isAppearCount!=1){
+							return true;
+						}
+						
+						
+						
+						//先将二维数组转换为一维数组
+						/*var temp = [];
+						initMatrix.forEach(function(v,i){
+							//x=1
+							v.forEach(function(val,ind){
+								var axisX =  Math.floor(i/3)+1;
+								var axisY = Math.floor(ind/3)+1;
+								
+							})
+					
+						});*/
+						
+						
+					}
+					
+					
+					return initMatrix
+				}
+				
+				return{
+					getSoduko:function(){
+						if(!_soduko){
+							_soduko = FormatterMatrix();
+						}
+						return _soduko;
+					},
+					
+				}
+			})();
+			
+			
+			console.log('整理后的数据为: ',soduko.getSoduko())		
+		</script>
+	</body>
+</html>

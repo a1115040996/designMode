@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>外观模式</title>
+		<link rel="stylesheet" type="text/css" href="css/Facade.css"/>
+	</head>
+	<body>
+		
+		<div class="gallery-container">
+			<div class="gallery-wrapper">
+				<div class="gallery-item">1</div>
+				<div class="gallery-item">2</div>
+				<div class="gallery-item">3</div>
+				<div class="gallery-item">4</div>
+			</div>
+			
+			<div class="left-btn"></div>
+		</div>
+		
+		  
+		
+		<script type="text/javascript">
+			/*
+			 外观模式(装饰者模式)
+			 * 为庞大的代码体提供一个方便的高层次的接口
+			 * 能够隐藏其底层的代码复杂性
+			 * 也可以把他想象成简化的API以供其他的开发人员使用
+			 * 
+			 * 
+			 * 1.类似于不同产品的支付的兼容
+			 * 2.比如不同浏览器的点击事件兼容
+			 * */
+			//例子 画廊滚动案例 
+			
+			HTMLCollection.prototype.getChildList = function(className){
+				var t = Array.prototype.slice.call(this);
+				var _msg = [];
+				t.forEach(function(v,i){
+					if(v.className==className){
+						_msg.push(v);
+					}
+				});
+				return _msg;
+			}
+			
+			
+			//设计装饰者模式
+			var gallery = function(selector,options){
+				gallery.prototype.init(selector,options)
+			}
+			
+			gallery.prototype = {
+				elements:{
+					container:null,
+					wrapper:null,
+					items:[],
+				},
+				_style:{
+					containerWidth:0,
+					itemsLength:0,
+					thisIndex:0,
+				},
+				init:function(selector,options){
+					//获取元素
+					var container = document.querySelectorAll(selector)[0];
+					var wrapper = container.children.getChildList('gallery-wrapper')[0];
+					var items = wrapper.children.getChildList('gallery-item');
+					var containerWidth = (parseInt(getComputedStyle(container).width));//计算页面父级初始宽度
+					
+					
+					this._style.containerWidth = containerWidth;//获取整体宽度
+					this._style.itemsLength = items.length;//获取子元素个数
+					this.elements.container  = container;
+					this.elements.wrapper  = wrapper;
+					this.elements.items  = items;
+					
+					
+					this.setRandomColor(items);//设置随机颜色
+					
+					//2.初始化样式左右位置
+					items.forEach(function(v,i){
+						v.style.left = containerWidth*i+'px';
+					});
+					
+					
+					//是否播放
+					if(options['autoplay']){
+						this.loop(options['autoplay']);
+					}
+				},
+				
+				setRandomColor:function(domList){
+					function getRandomColor(){
+						var colorValue = [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'];
+						var s = "#";
+						for (var i=0;i<6;i++) {
+							s+=colorValue[Math.floor(Math.random()*16)];
+						}
+						return s;
+					}
+					
+					domList.forEach(function(v,i){
+						v.style.background = getRandomColor();
+					});
+				},
+				
+				//元素循环播放
+				loop:function(options){
+					var that = this;
+					var wrapper =  this.elements.wrapper;
+					var containerWidth = this._style.containerWidth;
+					var itemsLength = this._style.itemsLength;
+					var timer = 0;
+					galleryMove(2000)
+					
+					var moveIndex = 0;
+					function galleryMove(delay){
+						setTimeout(function(){
+							moveIndex++;
+							if(moveIndex==itemsLength){
+								moveIndex=0;
+							}
+							wrapper.style.left =  - moveIndex*containerWidth+'px';
+						},delay);
+						
+						if(options['loop']){
+							setTimeout(function(){
+								galleryMove(delay);
+							},delay);
+						}
+					}
+					
+					
+					
+				},
+				//设置播放时长
+				delay:function(time){
+					
+				},
+				
+				getChildList:function(_HTMLCollection){
+				},
+				autoplay:function(){
+					
+				}
+			}
+			
+			
+			window.onload = function(){
+				gallery('.gallery-container',{
+					autoplay:{
+						loop:true,
+						delay:3000
+					},
+				})
+			
+			}
+			
+			
+				
+			
+		</script>
+	</body>
+</html>
