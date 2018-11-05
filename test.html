@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//变量的提权问题
+			(function(foo){
+				console.log(foo)
+				var foo = {'name':'lisi'};
+				console.log(foo.name);
+			})({name:'zhangsan'});
+		</script>
+	</body>
+</html>

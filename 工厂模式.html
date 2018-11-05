@@ -7,14 +7,74 @@
 	<body>
 		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 		<script type="text/javascript">
-			$(function(){
-				console.log('hello  world');
+			//创建工厂方法
+			var factory  = (function(){
+				//创建内部实例对象
+				function Orange(){
+					//创建私有方法
+					this.shade = '椭圆形'
+				}
 				
-				console.log('world ----------------')
-
-
-
-			})
+				//创建内部实例对象
+				function Apple(){
+					//创建私有方法
+					this.shade = '苹果形'
+				}
+				
+				//创建内部实例对象
+				function Green(){
+					//创建私有方法
+					this.shade = '草地绿型'
+				}
+				
+				
+				return{
+					createFruit:function(type){
+						var instance;//生成默认实例
+						
+						//返回对应的实体类
+						switch(type){
+							case 'orange':
+								instance = Orange;
+							break;
+							
+							case 'apple':
+								instance = Apple;
+							break;
+							
+							case 'green':
+								instance = Green;
+							break;
+						}
+						
+						//添加公共属性
+						instance.prototype = {
+							move:function(name){
+								console.log(name+'  正在移动')
+							},
+							eat:function(name){
+								console.log(name+'  正在吃饭')
+							}
+						}
+						
+						//生成实体类
+						return new instance();
+					}
+				}
+			})();
+			
+			
+			
+			var orange = factory.createFruit('orange');
+			orange.eat('orange');
+			orange.move('orange');
+			
+			
+			var apple = factory.createFruit('apple');
+			apple.move('apple');
+			apple.eat('apple')
+			
+			
 		</script>
 	</body>
 </html>
