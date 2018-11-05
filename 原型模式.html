@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>原型模式</title>
+	</head>
+	<body>
+		
+		
+		<script type="text/javascript">
+			function T(context){
+				return T.prototype.init(context);
+			}
+			T.prototype = {
+				init:function(context){
+					this.context = context;//将上下文对象存储在当前对象中
+					return this;
+				},
+				getParam:function(name){
+					console.log('当前的上下问对象为： ',this.context)
+					return "hello";
+				}
+			}
+			
+			T({
+				name:'zhangsan',
+				age:18
+			}).getParam();
+		</script>
+	</body>
+</html>
