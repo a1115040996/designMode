@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script src="js/jquery-2.1.0.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			//变量的提权问题
+			/*(function(foo){
+				console.log(foo)
+				var foo = {'name':'lisi'};
+				console.log(foo.name);
+			})({name:'zhangsan'});*/
+			
+			
+			
+			
+			//对象的封装问题
+				var Person = function(context){
+					
+					function Person(context){
+						this.age = 18;
+						this.name = 'zhangsan';
+						
+						function getName(){
+							return this.name;
+						};
+						
+						
+						
+						//公共变量方法
+						var publicMethods = {
+							getName:getName
+						}
+						//将公共变量变为外部可见
+						Object.assign(this,publicMethods);
+					}
+					
+					Person.prototype = {
+						//constructor:Person,//构造函数指向自身
+						_init_:function(){
+							this.getColor = function(){
+								console.log('yanse ')
+							}
+							return this;
+						},
+						getAge:function(){
+							console.log(this.age)
+						},
+						extend:function(obj){
+							for (o in obj) {
+								this[o] = obj[o]
+							}
+						}
+					}
+					
+					return new Person(context)
+				};
+				
+			
+			console.log(Person(window))
+			
+		</script>
+	</body>
+</html>

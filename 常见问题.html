@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		
+		<script type="text/javascript">
+		/*
+		 闭包以及作用域问题
+		 * 是否能够生成闭包
+		 * 调用对象 以及this的指向问题（谁调用的 this就指向谁）
+		 * */
+			(function(){
+				//未生成闭包
+				var obj = {
+					a:1,
+					fun:function(){
+						console.log(this.a);
+					}
+				}
+				
+				
+				//js函数调用时加括号和不加括号的区别.不加括号相当于把函数代码赋给等号左边,加括号是把函数返回值赋给等号左边.
+				//js中this的用法,this总是指向调用它的对象
+				var ff = obj.fun;
+				ff();//undefined
+				
+				
+				
+				//生成闭包 可以访问
+				var ob = function(){
+					var a = 1;
+					return{
+						a:a,
+						fun:function(){
+							console.log(this.a)
+						}
+					}
+				}
+				ob().fun()
+			})()
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		</script>
+	</body>
+</html>
