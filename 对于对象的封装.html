@@ -21,18 +21,25 @@
 				var Person = function(context){
 					
 					function Person(context){
+						
+						//构造器中应当存储变量 例如vue的上下文对象
 						this.age = 18;
 						this.name = 'zhangsan';
+						
 						
 						function getName(){
 							return this.name;
 						};
 						
-						
+						function totalAge(){
+							this.age += 1;
+							return this;
+						}
 						
 						//公共变量方法
 						var publicMethods = {
-							getName:getName
+							getName:getName,
+							totalAge:totalAge
 						}
 						//将公共变量变为外部可见
 						Object.assign(this,publicMethods);
@@ -55,12 +62,17 @@
 							}
 						}
 					}
-					
 					return new Person(context)
 				};
 				
 			
-			console.log(Person(window))
+			
+			var p = Person(window);
+			console.log(p.totalAge())
+			console.log(p.totalAge())
+			console.log(p.totalAge())
+			console.log(p.totalAge())
+			
 			
 		</script>
 	</body>
