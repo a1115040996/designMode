@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var controller = function(type){
+				// 环境内全局变量
+				var name = 'zangsan';
+				var age = 18;
+				var methods,view;
+				
+				// methods
+				methods = (function(){
+					console.log('create')
+					var methodsName = '方法列表名称'
+					return{
+						getMethodsName: function(){
+							console.log(methodsName)
+						},
+						// 获取全局名称
+						getGlobalName: function(){
+							console.log(name)
+						}
+					}
+				})()
+				
+				// 视图
+				view = (function(){
+					var viewName = '视图名称'
+					return{
+						getViewName: function(){
+							console.log(viewName)
+						}
+					}
+				})()
+				
+				
+				// 输入 对应的方法
+				switch(type){
+					// 输入对应的方法集
+					case 'methods':
+						return methods
+					break;
+					
+					// 视图集
+					case 'view':
+						return view;
+					break;
+				}
+			}
+			
+			// 创建一次 执行多次
+			var controller_methods = controller('methods');
+			controller_methods.getMethodsName()
+			controller_methods.getMethodsName()
+			controller_methods.getMethodsName()
+			
+			
+			controller('methods').getMethodsName()
+			
+			
+		</script>
+	</body>
+</html>
