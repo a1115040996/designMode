@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			
+			var Singleton = function(){
+				this.instance = null;
+				this.name = 'zhangsan';
+			}
+			Singleton.getInstance = function(){
+				if(!this.instance){
+					this.instance = new Singleton()
+				}
+				return this.instance
+			}
+			
+			var i = Singleton.getInstance();
+			var j = Singleton.getInstance();
+			console.log(i === j) // true
+			
+		</script>
+	</body>
+</html>

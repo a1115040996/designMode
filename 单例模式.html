@@ -46,12 +46,13 @@
 			})();
 			
 			var i = Singleton.getInstance();
-			i.getUserName();
+			//i.getUserName();
 			
 			var j = Singleton.getInstance();
-			j.setUserName('野猪佩奇');
-			j.getUserName();
-			i.getUserName();
+			console.log(i === j)
+			//j.setUserName('野猪佩奇');
+			//j.getUserName();
+			//i.getUserName();
 		</script>
 	</body>
 </html>
