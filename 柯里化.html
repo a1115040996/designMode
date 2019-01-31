@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function currie (){
+				var arg1 = arguments[0];
+				return function(){
+					var arg2 = arguments[0];
+					console.log(arg1+arg2)
+					return function(){
+						var arg3 = arguments[0]
+						console.log(arg1+arg2+arg3)
+						return function(){
+							console.log(arg1+arg2+arg3+arguments[0])
+						}
+					}
+				}
+			}
+			
+			currie(1)(2)(3)(4)
+			
+		</script>
+	</body>
+</html>

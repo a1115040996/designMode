@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+		
+			var controller = (function(){
+				var instance = null
+				function Build () {
+					this.color = 'red'
+					this.max = 100;
+					this.min = 10;
+				}
+				
+				Build.prototype = {
+					say: function(name){
+						console.log('hello' , name)
+					},
+					getPrice: function(){
+						console.log(this.color, this.max, this.min);
+					}
+				}
+				
+				
+				if(!instance){
+					instance = new Build();
+				}
+				
+				return instance;
+				
+			})()
+			
+			controller['getPrice']()
+		</script>
+	</body>
+</html>
