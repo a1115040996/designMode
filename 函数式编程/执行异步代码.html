@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+			// 执行顺序 从右往左依次执行
+			function compose(...list) {
+				// const list = Array.prototype.slice.call(arguments);
+				let flowResult = {};
+				const resultList = [];
+				let executeIndex = list.length - 1;
+
+				return function(type) {
+					return new Promise((resolve, reject) => {
+						executor(executeIndex);
+
+						function executor(executeIndex) {
+							if (isFunction(list[executeIndex])) {
+								list[executeIndex](flowResult).then(result => {
+									return setFlowMsg(result);
+								}).catch(reject);
+							} else if (isObject(list[executeIndex])) {
+								return setFlowMsg(list[executeIndex]);
+							} else {
+								reject(new Error('传入的变量必须是对象或者方法'));
+							}
+						}
+
+						function setFlowMsg(result) {
+							flowResult = result;
+							resultList.push(result);
+							executeIndex--;
+							if (executeIndex <= -1) {
+								switch (type) {
+									case 'getLast':
+										resolve(flowResult);
+										break;
+
+									case 'getAll':
+										resolve(resultList);
+										break;
+
+									default:
+										resolve(resultList);
+										break;
+								}
+								return;
+							} else {
+								return executor(executeIndex);
+							}
+						}
+
+						function isFunction(param) {
+							return Object.prototype.toString.call(param).toLowerCase() === '[object function]';
+						}
+
+						function isObject(param) {
+							return Object.prototype.toString.call(param).toLowerCase() === '[object object]'
+						}
+					});
+				}
+
+			}
+
+			function getLocation(data) {
+				console.log('准备执行获取地理位置信息接口, 传入的参数为==>', data);
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						console.log('getLocation 成功返回数据');
+						resolve({
+							lnt: 33.22234,
+							lng: 118.12222
+						});
+					}, 1500);
+				});
+			}
+
+			function getShop(locationMsg) {
+				console.log('准备执行获取门店列表接口,传入的参数信息为===>:', locationMsg);
+				const {
+					la,
+					lo
+				} = locationMsg || {
+					la: 10.0000,
+					lo: 20.0000
+				}
+				return new Promise((resolve, reject) => {
+					setTimeout(() => {
+						console.log('getShop 成功返回数据');
+						resolve({
+							shopName: 'XX国际店',
+							shopCode: 'LXISFT',
+							id: 1,
+							paintList: [{
+								name: '金属漆',
+								price: 20
+							}, {
+								name: '普通漆',
+								price: 100
+							}]
+						});
+					}, 1000)
+				});
+			}
+
+			function selectOnePaint(shop) {
+				console.log('准备执行选择默认一项喷漆,传入的数据为:', shop);
+				const {
+					paintList
+				} = shop;
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						console.log('选择的默认喷漆数据为====>', paintList[0]);
+						resolve(0);
+					}, 500)
+				});
+			}
+
+			// 组合代码 2合一
+			const getShopByLocation = compose(getShop, getLocation);
+			const selectOnePaintByShop = compose(selectOnePaint, getShopByLocation.bind('', 'getLast'));
+
+			// 组合代码 3合一
+			const selectOnePaintFlow = compose(selectOnePaint, getShop, getLocation);
+
+			/*// selectOnePaintByShop();
+			selectOnePaintFlow().then(res => {
+				// 不传 默认拉取 所有接口请求的数据 类似于promise.all
+			}).catch(err => {
+				// 统一异常捕获
+			});*/
+			
+			
+			async function main (){
+				const locationMsg = await getLocation();
+				console.log('start step 1===>', locationMsg);
+				const shopList = await getShop(locationMsg);
+				console.log('start step 2===>', shopList);
+				const selectOneIdx = await selectOnePaint(shopList);
+				console.log('start step 3===>', selectOneIdx);
+			}
+			main();
+			
+			
+			
+		</script>
+	</body>
+
+</html>

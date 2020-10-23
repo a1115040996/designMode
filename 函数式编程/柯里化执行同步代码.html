@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+
+		<script type="text/javascript">
+			function a() {
+				console.log('原始数据 不依赖任何函数');
+				return 1;
+			}
+
+			function b(data) {
+				console.log('b 函数依赖于 a函数 数据', data);
+				return 2;
+			}
+
+			function c(data) {
+				console.log('c 函数 依赖于b函数 数据', data);
+				return 3;
+			}
+			
+			function compose(fn) {
+				const context = {
+					step: 0
+				};
+				let flowResult = fn();
+				context.step++;
+				return function comp(nextStep) {
+					console.log(this, nextStep);
+					if (!nextStep) {
+						return;
+					} else {
+						flowResult = nextStep(flowResult);
+						context.step++;
+						return comp.bind(context);
+					}
+				}.bind(context);
+			}
+			/*
+			 * c数据依赖b数据  b数据依赖a数据 
+			 * 但是只能是同步代码 
+			 * */
+			compose(a)(b)(c);
+		</script>
+	</body>
+
+</html>

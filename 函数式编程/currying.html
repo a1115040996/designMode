@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+			
+			
+		
+			(function() {
+				function a() {
+					return new Promise((resolve) => {
+						resolve({
+							name: 'zhangsan'
+						});
+					})
+				}
+
+				function b() {
+					return new Promise((resolve) => {
+						resolve({
+							name: 'lisi'
+						});
+					})
+				}
+
+				function c() {
+					return new Promise((resolve) => {
+						resolve({
+							name: 'wangwu'
+						});
+					})
+				}
+				/*
+				 柯里化
+				 * 函数执行顺序: a=>b=>c
+				 * 函数依赖顺序: c=>b=>a
+				 * compose(a)(b)(c)
+				 * */
+				function compose(fn) {
+					let count = 0;
+					const res = fn();
+					return function comp(nextStep) {
+						if (!nextStep) {
+							return;
+						} else {
+							return comp.bind(this, res);
+						}
+					}
+				}
+
+				composeAsync = async() => {
+					let count = 0;
+					return function comp(nextStep) {
+						if (!nextStep) {
+							return;
+						} else {
+							return comp.bind();
+						}
+					}
+				}
+
+				compose(a);
+
+				/*
+				 降级 
+				 *  阶乘
+				 * */
+				function count(x) {
+					if (x === 1) {
+						return x;
+					} else {
+						console.log(arguments.callee)
+						return x * count(x - 1);
+					}
+				}
+
+				/*
+				 接受一个函数 在不使用for循环的情况下 输入 5 输出 [1,2,3,4,5]
+				 * */
+				function createArr(startNum) {
+					const arr = [];
+					return (function fn() {
+						arr.unshift(startNum);
+						startNum--;
+						if (startNum === 1) {
+							arr.unshift(1);
+							return arr;
+						} else {
+							return fn(startNum);
+						}
+					})()
+				}
+
+				/*
+				 柯里化
+				 * */
+				function add1(x) {
+					let count = x;
+					return function fn(y) {
+						if (!y) {
+							return count;
+						} else {
+							count += y;
+							return fn.bind();
+						}
+					}
+				}
+			})();
+			
+			
+		</script>
+	</body>
+
+</html>

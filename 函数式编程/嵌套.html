@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+			function compose() {
+				const toArray = (args) => Array.prototype.slice.call(args);
+				const list = toArray(arguments);
+				let listLen = list.length;
+				return function() {
+					console.log('return==>', arguments);
+					let result = list[listLen - 1](arguments);
+					const args = toArray(arguments);
+					while (listLen > 1) {
+						listLen--;
+						result = list[listLen-1](...result)
+					}
+					return result;
+				}
+			}
+
+			function setOne(str) {
+				return str + '1'
+			}
+
+			function setTwo(str) {
+				return str + '2'
+			}
+
+			function setThree(str) {
+				return str + '3'
+			}
+
+			console.log(compose(setOne, setTwo, setThree)('str'))
+		</script>
+	</body>
+
+</html>
